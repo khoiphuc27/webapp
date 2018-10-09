@@ -41,6 +41,7 @@
 		<beans:property name="annotatedClasses">
 			<beans:list>
 				<beans:value>com.khoiphuc27.model.Customer</beans:value>
+				<beans:value>com.khoiphuc27.model.Account</beans:value>
 			</beans:list>
 		</beans:property>
 		<beans:property name="hibernateProperties">
@@ -63,6 +64,12 @@
 	</beans:bean>
 	<beans:bean id="customerService" class="com.khoiphuc27.service.CustomerServiceImpl">
 		<beans:property name="customerDAO" ref="customerDAO"></beans:property>
+	</beans:bean>
+		<beans:bean id="accountDAO" class="com.khoiphuc27.dao.AccountDAOImpl">
+		<beans:property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
+	</beans:bean>
+	<beans:bean id="accountService" class="com.khoiphuc27.service.AccountServiceImpl">
+		<beans:property name="accountDAO" ref="accountDAO"></beans:property>
 	</beans:bean>
 	
 	<context:component-scan base-package="com.khoiphuc27" />

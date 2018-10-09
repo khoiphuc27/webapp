@@ -12,6 +12,15 @@
 		margin: auto;
 		padding: 10px;
 	}
+	div#command-div a {
+	    display: inline-block;
+	    background: #ddd;
+	    padding: 5px;
+	    margin: 10px;
+	    text-align: center;
+	    text-decoration: none;
+	    color: black;
+	}
 	table {
 		width: 100%;
 		table-layout: fixed;
@@ -37,13 +46,16 @@
 		display: inline-block;
 		width: 75%;
 	}
+	.invalid-noti {
+		color: red;
+	}
 </style>
 </head>
 <body>
 <h3>Search</h3>
 <div id="search-div">
-<c:url var="search" value="/search" ></c:url>
-	<form:form action="search" method="POST">
+<c:url var="customers" value="/customers" ></c:url>
+	<form:form action="customers" method="POST">
 		<table>
 			<tr>
 				<td>
@@ -62,8 +74,8 @@
 				</td>
 				<td>
 					<label for="gender">Gender:</label>
-    				<input type="radio" id="gender" name="gender" value="Male" checked>Male
-    				<input type="radio" id="gender" name="gender" value="Female">Female
+    				<input type="radio" id="gender" name="gender" value="Male" <c:if test="${(!empty gender) and (gender=='Male')}"> checked </c:if>>Male
+    				<input type="radio" id="gender" name="gender" value="Female" <c:if test="${(!empty gender) and (gender=='Female')}"> checked </c:if>>Female
 				</td>
 			</tr>
 			<tr>
@@ -77,25 +89,37 @@
 				</td>
 			</tr>
 		</table>
-	</form:form>    
+	</form:form> 
+	<c:if test="${!empty invalidInputNoti}">
+		<p class="invalid-noti">${invalidInputNoti}</p>
+	</c:if>   
 </div>
 
+<c:url var="customer" value="/customer" ></c:url>
+<form:form action="customer" method="POST">
 <h3>Commands</h3>
 <div id="command-div">
-	<input type="button" value="New">
-	<input type="button" value="Update">
-	<input type="button" value="Delete">
-	<input type="button" value="Export">
+<%-- 	<a type="button" href="<spring:url value="/customer"/>">New</a> --%>
+<%-- 	<a type="button" href="<spring:url value="/customer"/>">Update</a> --%>
+<%-- 	<a type="button" href="<spring:url value="/customer"/>">Delete</a> --%>
+<%-- 	<a type="button" href="<spring:url value="/customer"/>">Export</a> --%>
+
+	<input type="submit" name="newBtn" value="New">
+	<input type="submit" name="updateBtn" value="Update">
+	<input type="submit" name="deleteBtn" value="Delete">
+	<input type="submit" name="exportBtn" value="Export">
 </div>
 
 <h3>Customers Listing</h3>
 	<c:if test="${!empty listCustomers}">
 	<table id="customers-listing">
-		<col width="25%">
-		<col width="25%">
-		<col width="25%">
+		<col width="6%">
+		<col width="23%">
+		<col width="23%">
+		<col width="23%">
 		<col width="25%">
 		<tr>
+			<th></th>
 			<th>Name</th>
 			<th>Birthday</th>
 			<th>Phone</th>
@@ -103,6 +127,7 @@
 		</tr>
 	<c:forEach items="${listCustomers}" var="customer">
 		<tr>
+			<td><input type="checkbox" name="selectedIds" id="seletedIds" value="${customer.id}"></td>
 			<td>${customer.name}</td>
 			<td>${customer.dateOfBirth}</td>
 			<td>${customer.phone}</td>
@@ -111,20 +136,34 @@
 	</c:forEach>
 	</table>
 </c:if>
+</form:form>
+
+<h3>Input Search:</h3>
+
+Name: 
 <c:if test="${!empty name}">
 ${name}
 </c:if>
+<br/>
+Phone:
 <c:if test="${!empty phone}">
 ${phone}
 </c:if>
+<br/>
+Birthday:
 <c:if test="${!empty birthday}">
 ${birthday}
 </c:if>
+<br/>
+Gender:
 <c:if test="${!empty gender}">
 ${gender}
 </c:if>
+<br/>
+Email:
 <c:if test="${!empty email}">
 ${email}
 </c:if>
+<br/>
 </body>
 </html>

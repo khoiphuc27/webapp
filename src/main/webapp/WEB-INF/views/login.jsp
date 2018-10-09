@@ -5,12 +5,17 @@
 <html>
 <head>
 <title>Login</title>
+<style>
+	p.errorMsg {
+		color: red;
+	}
+</style>
 </head>
 <body>
 <h1>Login</h1>
 
-<c:url var="customers" value="/customers" ></c:url>
-<form:form action="${customers}" commandName="account">
+<c:url var="login" value="/login" ></c:url>
+<form:form action="${login}" commandName="account">
 	<table>
 		<tr>
 			<td>
@@ -40,10 +45,10 @@
 					value="<spring:message text="Login"/>" />
 			</td>
 		</tr>
-		<c:if test="${!empty msg}">
-		${msg}
-		</c:if>
 	</table>
+		<c:if test="${!empty errorMsg}">
+			<p class="errorMsg">${errorMsg}</p>
+		</c:if>
 </form:form>
 </body>
 </html>

@@ -2,9 +2,11 @@ package com.khoiphuc27.dao;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.khoiphuc27.model.Customer;
@@ -34,7 +36,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 	@Override
 	public List<Customer> listCustomers() {
 		Session session = this.sessionFactory.getCurrentSession();
-		List<Customer> customersList = session.createQuery("from Customer").list();
+		List<Customer> customersList = session.createQuery("FROM Customer").list();
 		return customersList;
 	}
 
@@ -58,31 +60,26 @@ public class CustomerDAOImpl implements CustomerDAO {
 	public List<Customer> searchCustomer(String name, String phone, String birthday, String email, String gender) {
 		Session session = this.sessionFactory.getCurrentSession();
 		
-		String hqlQuery = "FROM Customer WHERE name = :name";
-		if (!phone.isEmpty())
-			hqlQuery += " AND phone = :phone";
-		if (!birthday.isEmpty())
-			hqlQuery += " AND dateOfBirth = :birthday";
-		if (!email.isEmpty())
-			hqlQuery += " AND email = :email";
-		if (!gender.isEmpty())
-			hqlQuery += " AND gender = :gender";
-		
-		Query query = session.createQuery(hqlQuery);
-		System.out.println("Debug: " + name + " " + phone + " " + email + " " + birthday + " " + gender);
+		Criteria cr = session.createCriteria(Customer.class);
 		
 		if (!name.isEmpty())
-			query.setParameter("name", name);
+			cr.add(Restrictions.like("name", "%" + name + "%"));
 		if (!phone.isEmpty())
-			query.setParameter("phone", phone);
+			cr.add(Restrictions.eq("phone", phone));
 		if (!birthday.isEmpty())
-			query.setParameter("birthday", birthday);
+			cr.add(Restrictions.eq("dateOfBirth", birthday));
 		if (!email.isEmpty())
-			query.setParameter("email", email);
-		if (!gender.isEmpty())
-			query.setParameter("gender", (gender=="Male")? true : false);
+			cr.add(Restrictions.eq("email", email));
+		if (!gender.isEmpty()) {
+			if (gender.equals("Male"))
+				cr.add(Restrictions.eq("gender", true));
+			else //gender == Female
+				cr.add(Restrictions.eq("gender", false));
+		}
 		
-		List<Customer> customersList = query.list();
-		return customersList;
+		@SuppressWarnings("unchecked")
+		List<Customer> listCustomers = cr.list();
+		
+		return listCustomers;
 	}
 }
