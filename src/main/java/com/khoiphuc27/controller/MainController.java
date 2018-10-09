@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -128,6 +129,9 @@ public class MainController {
 		else if (updateBtn != null) {
 			if (ids != null && ids.length > 0) {
 				Customer selectedForUpdateCustomer = customerService.getCustomerById(ids[0]);
+				
+//				ModelMap modelMap = new ModelMap();
+//				modelMap.put("customer", selectedForUpdateCustomer);
 				model.addAttribute("customer", selectedForUpdateCustomer);
 				
 				//Debug
