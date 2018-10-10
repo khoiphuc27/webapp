@@ -111,7 +111,7 @@
 </div>
 
 <h3>Customers Listing</h3>
-	<c:if test="${!empty listCustomers}">
+<c:if test="${!empty listCustomers}">
 	<table id="customers-listing">
 		<col width="6%">
 		<col width="23%">
@@ -135,6 +135,18 @@
 		</tr>
 	</c:forEach>
 	</table>
+	
+	<c:if test="${numOfPages > 1}">
+		<c:if test="${page != 0}">
+			<a href="customers?page=1">First</a>
+		</c:if>
+		<c:forEach items="${listPages}" var="pageNumber">
+			<a href="customer?page=${pageNumber}">${pageNumber}</a>
+		</c:forEach>
+		<c:if test="${page != numOfPages}">
+			<a href="customers?page=${numOfPages}">Last</a>
+		</c:if>
+	</c:if>
 </c:if>
 </form:form>
 

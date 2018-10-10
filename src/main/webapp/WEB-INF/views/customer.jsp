@@ -38,29 +38,34 @@
 <c:url var="customer" value="/customer" ></c:url>
 	<form:form action="customer" method="POST" modelAttribute="customer">
 		<label for="name">Name</label>
-    	<form:input type="text" id="name" name="name" path="name"/>
+    	<form:input type="text" id="name" name="name" path="name" value="${customerDTO.name}" />
     	<br/>
     	<label for="birthday">Birthday</label>
-    	<form:input type="text" id="birthday" name="birthday" path="dateOfBirth"/>
+    	<form:input type="text" id="birthday" name="birthday" path="dateOfBirth" value="${customerDTO.birthday}" />
     	<br/>
     	<label for="phone">Phone</label>
-    	<form:input type="text" id="phone" name="phone" path="phone"/>
+		<form:input type="text" id="phone" name="phone" path="phone" value="${customerDTO.phone}" />
     	<br/>
     	<label for="email">Email</label>
-    	<form:input type="text" id="email" name="email" path="email"/>
+    	<form:input type="text" id="email" name="email" path="email" value="${customerDTO.email}" />
     	<br/>
     	<label for="gender">Gender</label>
-    	<form:radiobutton path="gender" value="true"/>Male
-    	<form:radiobutton path="gender" value="false"/>Female
+    	<form:radiobutton path="gender" value="true" />Male
+    	<form:radiobutton path="gender" value="false" />Female
 	    <br/>
 	    <label for="address">Address</label>
-	    <form:textarea id="address" name="address" path="addressLine" rows="3" cols="20"/>
+	    <form:textarea id="address" name="address" path="addressLine" rows="3" cols="20" value="${customerDTO.address}" />
 	    <br/>
-	    <label for="title">Title</label>
-	    <form:select id="title" name="title" path="title" items="${titleItems}"/>
+<!-- 	    <label for="title">Title</label> -->
+<%-- 	    <form:select id="title" name="title" path="title" items="${titleItems}" /> --%>
 	    <br/>
 	    <input class="button" type="reset" value="Reset">
 		<input class="button" type="submit" value="Search">
 	</form:form>
+<!-- checking -->
+<%-- <c:if test="${not empty customerDTO}"> --%>
+<!-- has value name: -->
+<%-- ${customerDTO.name} --%>
+<%-- </c:if> --%>
 </body>
 </html>

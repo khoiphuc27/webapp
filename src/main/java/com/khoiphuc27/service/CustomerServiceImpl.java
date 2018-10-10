@@ -6,10 +6,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.khoiphuc27.dao.CustomerDAO;
+import com.khoiphuc27.dto.CustomerDTO;
 import com.khoiphuc27.model.Customer;
 
 
 @Service
+@Transactional
 public class CustomerServiceImpl implements CustomerService {
 	
 	private CustomerDAO customerDAO;
@@ -19,39 +21,52 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	@Transactional
 	public void addCustomer(Customer p) {
 		this.customerDAO.addCustomer(p);
 	}
 
 	@Override
-	@Transactional
 	public void updateCustomer(Customer p) {
 		this.customerDAO.updateCustomer(p);
 	}
 
 	@Override
-	@Transactional
 	public List<Customer> listCustomers() {
 		return this.customerDAO.listCustomers();
 	}
 
 	@Override
-	@Transactional
-	public Customer getCustomerById(int id) {
-		return this.customerDAO.getCustomerById(id);
+	public CustomerDTO getCustomerById(int id) {
+		Customer customerModel = this.customerDAO.getCustomerById(id);
+		CustomerDTO customerDTO = new CustomerDTO();
+		
+		customerDTO.setName(customerModel.getName());
+		customerDTO.setPhone(customerModel.getPhone());
+		customerDTO.setBirthday(customerModel.getDateOfBirth());
+		customerDTO.setEmail(customerModel.getEmail());
+		customerDTO.setAddress(customerModel.getAddressLine());
+		customerDTO.setGender((customerModel.isGender()) ? "Male" : "Female");
+		customerDTO.setTitle(customerModel.getTitle());
+		
+		//Debug
+		System.out.println(customerDTO.getGender());
+		
+		return customerDTO;
 	}
 
 	@Override
-	@Transactional
 	public void removeCustomer(int id) {
 		this.customerDAO.removeCustomer(id);
 	}
 	
 	@Override
-	@Transactional
 	public List<Customer> searchCustomer(String name, String phone, String birthday, String email, String gender) {
 		return this.customerDAO.searchCustomer(name, phone, birthday, email, gender);
+	}
+
+	@Override
+	public List<Customer> getCustomersPagination(int page, int itemsPerPage) {
+		return this.customerDAO.getCustomersPagination(page, itemsPerPage);
 	}
 
 }

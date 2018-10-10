@@ -12,6 +12,7 @@ import com.khoiphuc27.model.Customer;
 
 
 @Service
+@Transactional
 public class AccountServiceImpl implements AccountService {
 	
 	private AccountDAO accountDAO;
@@ -21,7 +22,6 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	@Override
-	@Transactional
 	public List<Account> listAccounts(String userName, String password) {
 		return this.accountDAO.listAccounts(userName, password);
 	}

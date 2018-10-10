@@ -1,5 +1,6 @@
 package com.khoiphuc27.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.khoiphuc27.dto.CustomerDTO;
 import com.khoiphuc27.model.Account;
 import com.khoiphuc27.model.Customer;
 import com.khoiphuc27.service.AccountService;
@@ -59,8 +61,30 @@ public class MainController {
 	}
 	
 	@RequestMapping(value = "/customers", method = RequestMethod.GET)
-	public String customers(Model model) {
-		model.addAttribute("listCustomers", customerService.listCustomers());
+	public String customers (@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
+		final int ITEMS_PER_PAGE = 5;
+		
+//		Use pagination
+		int numOfCustomers = customerService.listCustomers().size();
+		int numOfPages;
+		
+		if (numOfCustomers % ITEMS_PER_PAGE == 0)
+			numOfPages = numOfCustomers / ITEMS_PER_PAGE;
+		else
+			numOfPages = numOfCustomers / ITEMS_PER_PAGE + 1;
+		
+		model.addAttribute("listCustomers", customerService.getCustomersPagination(page, ITEMS_PER_PAGE));
+		model.addAttribute("numOfPages", numOfPages);
+		model.addAttribute("page", page);
+		
+		List<Integer> listPages = new ArrayList<Integer>();
+		for (int i = 0; i < numOfPages; i++)
+			listPages.add(i + 1);
+		model.addAttribute("listPages", listPages);
+		
+//		Not use pagination, show all customers
+//		model.addAttribute("listCustomers", customerService.listCustomers());
+		
 		model.addAttribute("gender", "Male");
 		return "customers";
 	}
@@ -128,11 +152,10 @@ public class MainController {
 		}
 		else if (updateBtn != null) {
 			if (ids != null && ids.length > 0) {
-				Customer selectedForUpdateCustomer = customerService.getCustomerById(ids[0]);
+				CustomerDTO selectedForUpdateCustomer = customerService.getCustomerById(ids[0]);
 				
-//				ModelMap modelMap = new ModelMap();
-//				modelMap.put("customer", selectedForUpdateCustomer);
-				model.addAttribute("customer", selectedForUpdateCustomer);
+				model.addAttribute("customer", new Customer());
+				model.addAttribute("customerDTO", selectedForUpdateCustomer);
 				
 				//Debug
 				System.out.println("Selected Customer IDs:");
@@ -142,28 +165,4 @@ public class MainController {
 		
 		return "customer";
 	}
-	
-	
-//	@RequestMapping(value = "/customer")
-//	public String customer(Model model) {
-//		if (!model.containsAttribute("customer")) {
-//			model.addAttribute("gender", "Male");
-//			model.addAttribute("customer", new Customer());
-//		}
-//		return "customer";
-//	}
-//	
-//	@RequestMapping(params = "new", method = RequestMethod.POST)
-//	public String newCustomer(HttpServletRequest request) {
-//		return "redirect:/customer";
-//	}
-//	@RequestMapping(params = "update", method = RequestMethod.POST)
-//	public String update(HttpServletRequest request, @RequestParam(value = "selectedIds") int ids[]) {
-//		
-//		//Debug
-//		System.out.println("Selected IDs:");
-//		for (int i : ids) System.out.println(i);
-//		return "redirect:/customer";
-//	}
-//	
 }

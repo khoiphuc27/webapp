@@ -82,4 +82,18 @@ public class CustomerDAOImpl implements CustomerDAO {
 		
 		return listCustomers;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Customer> getCustomersPagination(int page, int itemsPerPage) {
+		Session session = this.sessionFactory.getCurrentSession();
+		Criteria cr = session.createCriteria(Customer.class);
+		
+		cr.setMaxResults(itemsPerPage);
+		cr.setFirstResult((page - 1) * itemsPerPage);
+		
+		List<Customer> listCustomers = cr.list();
+		
+		return listCustomers;
+	}
 }
