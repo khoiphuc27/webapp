@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.khoiphuc27.dao.CustomerDAO;
 import com.khoiphuc27.dto.CustomerDTO;
 import com.khoiphuc27.model.Customer;
+import com.khoiphuc27.model.titleEnum;
 
 
 @Service
@@ -45,11 +46,11 @@ public class CustomerServiceImpl implements CustomerService {
 		customerDTO.setBirthday(customerModel.getDateOfBirth());
 		customerDTO.setEmail(customerModel.getEmail());
 		customerDTO.setAddress(customerModel.getAddressLine());
-		customerDTO.setGender((customerModel.isGender()) ? "Male" : "Female");
-		customerDTO.setTitle(customerModel.getTitle());
+		customerDTO.setGender((customerModel.isGender()));
+		customerDTO.setTitle(customerModel.getTitle().equals("MR") ? titleEnum.MR : titleEnum.MRS);
 		
 		//Debug
-		System.out.println(customerDTO.getGender());
+		System.out.println(customerDTO.isGender());
 		
 		return customerDTO;
 	}
@@ -67,6 +68,11 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public List<Customer> getCustomersPagination(int page, int itemsPerPage) {
 		return this.customerDAO.getCustomersPagination(page, itemsPerPage);
+	}
+
+	@Override
+	public List<Customer> sortCustomers(String sortBy) {
+		return this.customerDAO.sortCustomers(sortBy);
 	}
 
 }

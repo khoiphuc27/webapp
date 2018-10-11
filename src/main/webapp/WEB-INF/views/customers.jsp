@@ -49,39 +49,52 @@
 	.invalid-noti {
 		color: red;
 	}
+	div.pagination {
+		width: 70%;
+		margin: auto;
+		text-align: right;
+	}
+	div.pagination a {
+		display: inline-block;
+		padding: 5px;
+		margin: 5px;
+		text-decoration: none;
+		font-weight: bold;
+		border: 1px solid black;
+	}
 </style>
 </head>
 <body>
 <h3>Search</h3>
 <div id="search-div">
 <c:url var="customers" value="/customers" ></c:url>
-	<form:form action="customers" method="POST">
+	<form:form action="customers" method="POST" modelAttribute="customer">
 		<table>
 			<tr>
 				<td>
 					<label for="name">Name:</label>
-    				<input type="text" id="name" name="name" value="<c:if test="${!empty name}">${name}</c:if>">
+    				<form:input type="text" id="name" name="name" path="name"/>
     			</td>
     			<td>
 				    <label for="phone">Phone:</label>
-				    <input type="text" id="phone" name="phone" value="<c:if test="${!empty phone}">${phone}</c:if>">
+				    <form:input type="text" id="phone" name="phone" path="phone" />
 				</td>
 			</tr>
 			<tr>
 				<td>
 					<label for="birthday">Birthday:</label>
-    				<input type="date" id="birthday" name="birthday" value="<c:if test="${!empty birthday}">${birthday}</c:if>">
+    				<form:input type="date" id="birthday" name="birthday" path="dateOfBirth" />
 				</td>
 				<td>
 					<label for="gender">Gender:</label>
-    				<input type="radio" id="gender" name="gender" value="Male" <c:if test="${(!empty gender) and (gender=='Male')}"> checked </c:if>>Male
-    				<input type="radio" id="gender" name="gender" value="Female" <c:if test="${(!empty gender) and (gender=='Female')}"> checked </c:if>>Female
+    				<form:radiobutton id="gender" name="gender" path="gender" value="true" />Male
+    				<form:radiobutton id="gender" name="gender" path="gender" value="false" />Female
 				</td>
 			</tr>
 			<tr>
 				<td>
 					<label for="email">Email:</label>
-    				<input type="text" id="email" name="email" value="<c:if test="${!empty email}">${email}</c:if>">
+    				<form:input type="text" id="email" name="email" path="email" />
 				</td>
 				<td>
     				<input type="reset" value="Reset">
@@ -89,10 +102,10 @@
 				</td>
 			</tr>
 		</table>
-	</form:form> 
-	<c:if test="${!empty invalidInputNoti}">
-		<p class="invalid-noti">${invalidInputNoti}</p>
-	</c:if>   
+	<p>Name: <font color="red"><form:errors path="name"/></font></p>
+	<p>Phone: <font color="red"><form:errors path="phone"/></font></p>
+	<p>Email: <font color="red"><form:errors path="email"/></font></p>
+	</form:form>
 </div>
 
 <c:url var="customer" value="/customer" ></c:url>
@@ -120,10 +133,10 @@
 		<col width="25%">
 		<tr>
 			<th></th>
-			<th>Name</th>
-			<th>Birthday</th>
-			<th>Phone</th>
-			<th>Email</th>
+			<th><a href="customers?sort=name">Name</a></th>
+			<th><a href="customers?sort=birthday">Birthday</a></th>
+			<th><a href="customers?sort=phone">Phone</a></th>
+			<th><a href="customers?sort=email">Email</a></th>
 		</tr>
 	<c:forEach items="${listCustomers}" var="customer">
 		<tr>
@@ -136,18 +149,23 @@
 	</c:forEach>
 	</table>
 	
-	<c:if test="${numOfPages > 1}">
-		<c:if test="${page != 0}">
-			<a href="customers?page=1">First</a>
+	<div class="pagination">
+		<c:if test="${numOfPages > 1}">
+			<c:if test="${page != 1}">
+				<a href="customers?page=1">First</a>
+				<a href="customers?page=${page - 1}">Previous</a>
+			</c:if>
+			<c:forEach items="${listPages}" var="pageNumber">
+				<a href="customers?page=${pageNumber}">${pageNumber}</a>
+			</c:forEach>
+			<c:if test="${page != numOfPages}">
+				<a href="customers?page=${page + 1}">Next</a>
+				<a href="customers?page=${numOfPages}">Last</a>
+			</c:if>
 		</c:if>
-		<c:forEach items="${listPages}" var="pageNumber">
-			<a href="customer?page=${pageNumber}">${pageNumber}</a>
-		</c:forEach>
-		<c:if test="${page != numOfPages}">
-			<a href="customers?page=${numOfPages}">Last</a>
-		</c:if>
-	</c:if>
+	</div>	
 </c:if>
+
 </form:form>
 
 <h3>Input Search:</h3>

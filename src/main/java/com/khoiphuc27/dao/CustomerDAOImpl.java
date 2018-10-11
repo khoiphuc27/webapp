@@ -6,6 +6,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -94,6 +95,25 @@ public class CustomerDAOImpl implements CustomerDAO {
 		
 		List<Customer> listCustomers = cr.list();
 		
+		return listCustomers;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Customer> sortCustomers(String sortBy) {
+		Session session = this.sessionFactory.getCurrentSession();
+		Criteria cr = session.createCriteria(Customer.class);
+		
+		if (sortBy.equals("name"))
+			cr.addOrder(Order.asc("name"));
+		else if (sortBy.equals("birthday"))
+			cr.addOrder(Order.asc("dateOfBirth"));
+		else if (sortBy.equals("phone"))
+			cr.addOrder(Order.asc("phone"));
+		else if (sortBy.equals("email"))
+			cr.addOrder(Order.asc("email"));
+		
+		List<Customer> listCustomers = cr.list();
 		return listCustomers;
 	}
 }

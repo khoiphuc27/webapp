@@ -6,12 +6,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.khoiphuc27.dto.CustomerDTO;
 import com.khoiphuc27.model.Account;
 import com.khoiphuc27.model.Customer;
+import com.khoiphuc27.model.titleEnum;
 import com.khoiphuc27.service.AccountService;
 import com.khoiphuc27.service.CustomerService;
 
@@ -61,9 +64,9 @@ public class MainController {
 	}
 	
 	@RequestMapping(value = "/customers", method = RequestMethod.GET)
-	public String customers (@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
+	public String customers (@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "sort", required=false) String sort, Model model) {
 		final int ITEMS_PER_PAGE = 5;
-		
+//		PAGINATION
 //		Use pagination
 		int numOfCustomers = customerService.listCustomers().size();
 		int numOfPages;
@@ -73,19 +76,24 @@ public class MainController {
 		else
 			numOfPages = numOfCustomers / ITEMS_PER_PAGE + 1;
 		
-		model.addAttribute("listCustomers", customerService.getCustomersPagination(page, ITEMS_PER_PAGE));
 		model.addAttribute("numOfPages", numOfPages);
 		model.addAttribute("page", page);
 		
 		List<Integer> listPages = new ArrayList<Integer>();
 		for (int i = 0; i < numOfPages; i++)
 			listPages.add(i + 1);
+		
 		model.addAttribute("listPages", listPages);
-		
-//		Not use pagination, show all customers
-//		model.addAttribute("listCustomers", customerService.listCustomers());
-		
 		model.addAttribute("gender", "Male");
+		
+//		SORT
+		if (sort != null) {
+			model.addAttribute("listCustomers", customerService.sortCustomers(sort));
+		}
+		else
+			model.addAttribute("listCustomers", customerService.getCustomersPagination(page, ITEMS_PER_PAGE));
+		
+		model.addAttribute("customer", new Customer());
 		return "customers";
 	}
 
@@ -99,70 +107,49 @@ public class MainController {
 	}
 	
 	@RequestMapping(value = "/customers", method = RequestMethod.POST)
-	public String searchCustomer(@RequestParam("name") String name, @RequestParam("phone")String phone, @RequestParam("birthday") String birthday, @RequestParam("email") String email, @RequestParam("gender") String gender, Model model) {
-		model.addAttribute("name", name);
-		model.addAttribute("phone", phone);
-		model.addAttribute("birthday", birthday);
-		model.addAttribute("email", email);
-		model.addAttribute("gender", gender);
+	public String searchCustomer(@ModelAttribute("customer") @Valid Customer customer, BindingResult result, Model model) {
+		if (result.hasErrors())
+			return "customers";
 		
-		if (validateInputSearch(name, phone, email, model))
-			model.addAttribute("listCustomers", customerService.searchCustomer(name, phone, birthday, email, gender));
+		String name = customer.getName();
+		String phone = customer.getPhone();
+		String birthday = customer.getDateOfBirth();
+		String email = customer.getEmail();
+		String gender = (customer.isGender() == true) ? "Male" : "Female";
+		
+		List<Customer> listCustomers = customerService.searchCustomer(name, phone, birthday, email, gender);
+		
+		model.addAttribute("listCustomers", listCustomers);
 		return "customers";
 	}
-	
-	private boolean validateInputSearch(String name, String phone, String email, Model model) {
-		String invalidInputNoti = "";
-		boolean checkName, checkPhone, checkEmail;
-		checkName = checkPhone = checkEmail = true;
-		
-		if (name.length() > 255) {
-			invalidInputNoti += "Name length is exceed 255 characters.\n";
-			checkName = false;
-		}
-		if (phone.length() > 255) {
-			invalidInputNoti += "Phone length is exceed 255 characters.\n";
-			checkPhone = false;
-		}
-		if (!email.isEmpty() && !checkEmailPattern(email)) {
-			invalidInputNoti += "Not valid email pattern.\n";
-			checkEmail = false;
-		}
-		
-		model.addAttribute("invalidInputNoti", invalidInputNoti);
-		return checkName && checkPhone && checkEmail ;
-	}
 
-	private boolean checkEmailPattern(String email) {
-		Pattern pattern = Pattern.compile("^.+@.+\\..+$");
-		Matcher matcher = pattern.matcher(email);
-		return matcher.matches();
-	}
-	
 	@RequestMapping(value = "/customer")
-	public String customer(HttpServletRequest request, Model model, @RequestParam(value="selectedIds", required=false) int ids[]) {
+	public String customer(HttpServletRequest request, Model model, @RequestParam(value="selectedIds", required=false) int ids[], @ModelAttribute("customer") CustomerDTO customerDTO) {
 		String newBtn = request.getParameter("newBtn");
 		String updateBtn = request.getParameter("updateBtn");
 		String deleteBtn = request.getParameter("deleteBtn");
 		String exportBtn = request.getParameter("exportBtn");
+		String resetBtn = request.getParameter("resetBtn");
 		
 		if (newBtn != null) {
-			model.addAttribute("gender", "Male");
-			model.addAttribute("customer", new Customer());
+			model.addAttribute("customer", new CustomerDTO());
 		}
 		else if (updateBtn != null) {
 			if (ids != null && ids.length > 0) {
 				CustomerDTO selectedForUpdateCustomer = customerService.getCustomerById(ids[0]);
 				
-				model.addAttribute("customer", new Customer());
-				model.addAttribute("customerDTO", selectedForUpdateCustomer);
+//				model.addAttribute("customer", new Customer());
+				model.addAttribute("customer", selectedForUpdateCustomer);
 				
 				//Debug
 				System.out.println("Selected Customer IDs:");
 				for (int i : ids) System.out.println(i);
 			}
 		}
+		else if (resetBtn != null)
+			model.addAttribute("customer", new CustomerDTO());
 		
+		model.addAttribute("titleItems", titleEnum.values());
 		return "customer";
 	}
 }

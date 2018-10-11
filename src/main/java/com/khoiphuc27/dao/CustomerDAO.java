@@ -13,5 +13,5 @@ public interface CustomerDAO {
 	public void removeCustomer(int id);
 	public List<Customer> searchCustomer(String name, String phone, String birthday, String email, String gender);
 	public List<Customer> getCustomersPagination(int page, int itemsPerPage);
-	
+	public List<Customer> sortCustomers(String sortBy);
 }

@@ -1,13 +1,15 @@
 package com.khoiphuc27.dto;
 
+import com.khoiphuc27.model.titleEnum;
+
 public class CustomerDTO {
 	private String name;
 	private String birthday;
 	private String phone;
 	private String email;
-	private String gender;
+	private boolean gender = true;
 	private String address;
-	private String title;
+	private titleEnum title;
 	
 	public String getEmail() {
 		return email;
@@ -33,11 +35,11 @@ public class CustomerDTO {
 		this.phone = phone;
 	}
 
-	public String getGender() {
+	public boolean isGender() {
 		return gender;
 	}
 
-	public void setGender(String gender) {
+	public void setGender(boolean gender) {
 		this.gender = gender;
 	}
 
@@ -49,11 +51,11 @@ public class CustomerDTO {
 		this.address = address;
 	}
 
-	public String getTitle() {
+	public titleEnum getTitle() {
 		return title;
 	}
 
-	public void setTitle(String title) {
+	public void setTitle(titleEnum title) {
 		this.title = title;
 	}
 

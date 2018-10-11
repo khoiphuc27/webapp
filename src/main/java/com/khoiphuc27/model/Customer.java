@@ -6,6 +6,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Email;
 
 @Entity
 @Table(name="CUSTOMER")
@@ -17,19 +20,22 @@ public class Customer {
 	private int id;
 	
 	@Column(name = "name")
+	@Size(min=0, max=20)
 	private String name;
 	
 	@Column(name = "dateOfBirth")
 	private String dateOfBirth;
 	
 	@Column(name = "phone")
+	@Size(min=0, max=20)
 	private String phone;
 	
 	@Column(name = "email")
+	@Email
 	private String email;
 	
 	@Column(name = "gender")
-	private boolean gender;
+	private boolean gender = true;
 	
 	@Column(name = "addressLine")
 	private String addressLine;
