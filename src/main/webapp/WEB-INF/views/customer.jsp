@@ -61,6 +61,9 @@
 	    <br/>
 	    <input class="button" type="submit" name="resetBtn" value="Reset">
 		<input class="button" type="submit" name="saveBtn" value="Save">
+		<p><font color="red"><form:errors path="phone"/></font></p>
+		<p><font color="red"><form:errors path="email"/></font></p>
+		<p><font color="red"><form:errors path="address"/></font></p>
 	</form:form>
 <!-- checking -->
 <%-- <c:if test="${not empty customer}"> --%>

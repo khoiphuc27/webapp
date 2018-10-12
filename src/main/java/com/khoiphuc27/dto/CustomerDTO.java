@@ -1,15 +1,42 @@
 package com.khoiphuc27.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Email;
+
 import com.khoiphuc27.model.titleEnum;
+import com.khoiphuc27.validator.Phone;
 
 public class CustomerDTO {
+	int id;
+	@Size(max=255)
+	@NotNull
 	private String name;
+	@NotNull
 	private String birthday;
+	@Phone
+	@NotNull
 	private String phone;
+	@Email
+	@NotNull
 	private String email;
+	@NotNull
 	private boolean gender = true;
+	@Size(max=4000)
+	@NotNull
 	private String address;
-	private titleEnum title;
+	@NotNull
+	private titleEnum title = titleEnum.MR;
+	
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 	
 	public String getEmail() {
 		return email;

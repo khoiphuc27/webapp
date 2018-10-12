@@ -98,18 +98,18 @@
 				</td>
 				<td>
     				<input type="reset" value="Reset">
-    				<input type="submit" value="Search">
+    				<input type="submit" name="searchBtn" value="Search">
 				</td>
 			</tr>
 		</table>
-	<p>Name: <font color="red"><form:errors path="name"/></font></p>
-	<p>Phone: <font color="red"><form:errors path="phone"/></font></p>
-	<p>Email: <font color="red"><form:errors path="email"/></font></p>
+	<p><font color="red"><form:errors path="name"/></font></p>
+	<p><font color="red"><form:errors path="phone"/></font></p>
+	<p><font color="red"><form:errors path="email"/></font></p>
 	</form:form>
 </div>
 
-<c:url var="customer" value="/customer" ></c:url>
-<form:form action="customer" method="POST">
+<c:url var="customers" value="/customers" ></c:url>
+<form:form action="customers" method="POST">
 <h3>Commands</h3>
 <div id="command-div">
 <%-- 	<a type="button" href="<spring:url value="/customer"/>">New</a> --%>

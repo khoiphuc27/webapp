@@ -41,6 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
 		Customer customerModel = this.customerDAO.getCustomerById(id);
 		CustomerDTO customerDTO = new CustomerDTO();
 		
+		customerDTO.setId(customerModel.getId());
 		customerDTO.setName(customerModel.getName());
 		customerDTO.setPhone(customerModel.getPhone());
 		customerDTO.setBirthday(customerModel.getDateOfBirth());

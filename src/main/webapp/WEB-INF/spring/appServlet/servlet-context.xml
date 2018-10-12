@@ -72,6 +72,13 @@
 		<beans:property name="accountDAO" ref="accountDAO"></beans:property>
 	</beans:bean>
 	
+<!-- 	<beans:bean id="customerFormValidator" class="com.khoiphuc27.validator.CustomerFormValidator" /> -->
+	
+	<beans:bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<beans:property name="basename" value="classpath:message" />
+		<beans:property name="defaultEncoding" value="UTF-8" />
+	</beans:bean>
 	<context:component-scan base-package="com.khoiphuc27" />
 
 </beans:beans>

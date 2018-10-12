@@ -2,8 +2,6 @@ package com.khoiphuc27.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -12,13 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.khoiphuc27.dto.CustomerDTO;
 import com.khoiphuc27.model.Account;
@@ -35,6 +37,15 @@ public class MainController {
 	@Autowired(required=true)
 	private CustomerService customerService;
 	
+//	@Autowired
+//	@Qualifier("customerFormValidator")
+//	private Validator customerFormValidator;
+//	
+//	@InitBinder
+//	private void initBinder(WebDataBinder binder) {
+//		binder.setValidator(customerFormValidator);
+//	}
+//	
 	@RequestMapping("/")
 	public String home(Model model) {
 		return "redirect:/login";
@@ -107,49 +118,121 @@ public class MainController {
 	}
 	
 	@RequestMapping(value = "/customers", method = RequestMethod.POST)
-	public String searchCustomer(@ModelAttribute("customer") @Valid Customer customer, BindingResult result, Model model) {
-		if (result.hasErrors())
-			return "customers";
+	public String searchCustomer(HttpServletRequest request, @ModelAttribute("customer") @Valid Customer customer, BindingResult result, @RequestParam(value="selectedIds", required=false) int ids[], RedirectAttributes redirectAttributes, Model model) {		
 		
-		String name = customer.getName();
-		String phone = customer.getPhone();
-		String birthday = customer.getDateOfBirth();
-		String email = customer.getEmail();
-		String gender = (customer.isGender() == true) ? "Male" : "Female";
-		
-		List<Customer> listCustomers = customerService.searchCustomer(name, phone, birthday, email, gender);
-		
-		model.addAttribute("listCustomers", listCustomers);
-		return "customers";
-	}
-
-	@RequestMapping(value = "/customer")
-	public String customer(HttpServletRequest request, Model model, @RequestParam(value="selectedIds", required=false) int ids[], @ModelAttribute("customer") CustomerDTO customerDTO) {
+		String searchBtn = request.getParameter("searchBtn");
 		String newBtn = request.getParameter("newBtn");
 		String updateBtn = request.getParameter("updateBtn");
 		String deleteBtn = request.getParameter("deleteBtn");
 		String exportBtn = request.getParameter("exportBtn");
-		String resetBtn = request.getParameter("resetBtn");
 		
-		if (newBtn != null) {
-			model.addAttribute("customer", new CustomerDTO());
+		if (searchBtn != null ) {
+			if (result.hasErrors())
+				return "customers";
+			
+			String name = customer.getName();
+			String phone = customer.getPhone();
+			String birthday = customer.getDateOfBirth();
+			String email = customer.getEmail();
+			String gender = (customer.isGender() == true) ? "Male" : "Female";
+			
+			List<Customer> listCustomers = customerService.searchCustomer(name, phone, birthday, email, gender);
+			
+			model.addAttribute("listCustomers", listCustomers);
+			return "customers";
 		}
+		else if (newBtn != null)
+			return "redirect:/customer";
 		else if (updateBtn != null) {
 			if (ids != null && ids.length > 0) {
-				CustomerDTO selectedForUpdateCustomer = customerService.getCustomerById(ids[0]);
-				
-//				model.addAttribute("customer", new Customer());
-				model.addAttribute("customer", selectedForUpdateCustomer);
-				
-				//Debug
-				System.out.println("Selected Customer IDs:");
-				for (int i : ids) System.out.println(i);
+			CustomerDTO selectedForUpdateCustomer = customerService.getCustomerById(ids[0]);
+			redirectAttributes.addFlashAttribute("customer", selectedForUpdateCustomer);
+			//Debug
+			System.out.println("Selected Customer IDs:");
+			for (int i : ids) System.out.println(i);
 			}
+			return "redirect:/customer";
 		}
-		else if (resetBtn != null)
+		else return "customers";
+	}
+	
+	@RequestMapping(value="/customer", method=RequestMethod.GET)
+	public String customer(Model model) {
+		if (!model.containsAttribute("customer"))
 			model.addAttribute("customer", new CustomerDTO());
-		
 		model.addAttribute("titleItems", titleEnum.values());
 		return "customer";
 	}
+	
+	@RequestMapping(value="/customer", method=RequestMethod.POST)
+	public String customerAction(HttpServletRequest request, @ModelAttribute("customer") @Valid CustomerDTO customerDTO, BindingResult result, Model model) {
+		String resetBtn = request.getParameter("resetBtn");
+		String saveBtn = request.getParameter("saveBtn");
+		
+		if (resetBtn != null)
+			return "redirect:/customer";
+		else if (saveBtn != null) {
+			if (result.hasErrors()) {
+				model.addAttribute("customer", customerDTO);
+				model.addAttribute("titleItems", titleEnum.values());
+				return "customer";
+			}
+			if (customerDTO.getId() == 0) {
+				//Add new Customer
+				Customer newCustomer = new Customer();
+				newCustomer.setName(customerDTO.getName());
+				newCustomer.setDateOfBirth(customerDTO.getBirthday());
+				newCustomer.setPhone(customerDTO.getPhone());
+				newCustomer.setEmail(customerDTO.getEmail());
+				newCustomer.setGender((customerDTO.isGender()));
+				newCustomer.setAddressLine(customerDTO.getAddress());
+				newCustomer.setTitle(customerDTO.getTitle().name());
+				
+				this.customerService.addCustomer(newCustomer);
+				System.out.println("Added customer");
+			}
+			else {
+				//Update Customer
+				
+			}				
+			
+			model.addAttribute("titleItems", titleEnum.values());
+			return "redirect:/customers";
+		}
+		
+		return "customer";
+	}
+
+//	@RequestMapping(value = "/customer")
+//	public String customer(HttpServletRequest request, Model model, @RequestParam(value="selectedIds", required=false) int ids[], @ModelAttribute("customer") @Valid CustomerDTO customerDTO, BindingResult result) {
+//		if (result.hasErrors())
+//			return "customer";
+//		
+//		String newBtn = request.getParameter("newBtn");
+//		String updateBtn = request.getParameter("updateBtn");
+//		String deleteBtn = request.getParameter("deleteBtn");
+//		String exportBtn = request.getParameter("exportBtn");
+//		String resetBtn = request.getParameter("resetBtn");
+//		
+//		if (newBtn != null) {
+//			model.addAttribute("customer", new CustomerDTO());
+//		}
+//		else if (updateBtn != null) {
+//			if (ids != null && ids.length > 0) {
+//				CustomerDTO selectedForUpdateCustomer = customerService.getCustomerById(ids[0]);
+//				
+////				model.addAttribute("customer", new Customer());
+//				model.addAttribute("customer", selectedForUpdateCustomer);
+//				
+//				//Debug
+//				System.out.println("Selected Customer IDs:");
+//				for (int i : ids) System.out.println(i);
+//			}
+//		}
+//		else if (resetBtn != null)
+//			model.addAttribute("customer", new CustomerDTO());
+//		
+//		model.addAttribute("titleItems", titleEnum.values());
+//		return "customer";
+//	}
 }

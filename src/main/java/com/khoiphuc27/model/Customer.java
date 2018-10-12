@@ -10,6 +10,8 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 
+import com.khoiphuc27.validator.Phone;
+
 @Entity
 @Table(name="CUSTOMER")
 public class Customer {
@@ -20,14 +22,14 @@ public class Customer {
 	private int id;
 	
 	@Column(name = "name")
-	@Size(min=0, max=20)
+	@Size(min=0, max=255)
 	private String name;
 	
 	@Column(name = "dateOfBirth")
 	private String dateOfBirth;
 	
 	@Column(name = "phone")
-	@Size(min=0, max=20)
+	@Size(min=0, max=255)
 	private String phone;
 	
 	@Column(name = "email")
