@@ -37,7 +37,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public CustomerDTO getCustomerById(int id) {
+	public CustomerDTO getCustomerDTOById(int id) {
 		Customer customerModel = this.customerDAO.getCustomerById(id);
 		CustomerDTO customerDTO = new CustomerDTO();
 		
@@ -74,6 +74,11 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public List<Customer> sortCustomers(String sortBy) {
 		return this.customerDAO.sortCustomers(sortBy);
+	}
+
+	@Override
+	public Customer getCustomerById(int id) {
+		return this.customerDAO.getCustomerById(id);
 	}
 
 }

@@ -10,7 +10,7 @@ import com.khoiphuc27.validator.Phone;
 
 public class CustomerDTO {
 	int id;
-	@Size(max=255)
+	@Size(max=20)
 	@NotNull
 	private String name;
 	@NotNull
@@ -23,7 +23,7 @@ public class CustomerDTO {
 	private String email;
 	@NotNull
 	private boolean gender = true;
-	@Size(max=4000)
+	@Size(max=20)
 	@NotNull
 	private String address;
 	@NotNull

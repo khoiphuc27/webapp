@@ -97,7 +97,7 @@
     				<form:input type="text" id="email" name="email" path="email" />
 				</td>
 				<td>
-    				<input type="reset" value="Reset">
+    				<input type="submit" name="resetBtn" value="Reset">
     				<input type="submit" name="searchBtn" value="Search">
 				</td>
 			</tr>

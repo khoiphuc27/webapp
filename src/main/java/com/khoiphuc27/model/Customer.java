@@ -22,14 +22,14 @@ public class Customer {
 	private int id;
 	
 	@Column(name = "name")
-	@Size(min=0, max=255)
+	@Size(min=0, max=20)
 	private String name;
 	
 	@Column(name = "dateOfBirth")
 	private String dateOfBirth;
 	
 	@Column(name = "phone")
-	@Size(min=0, max=255)
+	@Size(min=0, max=20)
 	private String phone;
 	
 	@Column(name = "email")
