@@ -9,6 +9,7 @@ public interface CustomerService {
 
 	public void addCustomer(Customer c);
 	public void updateCustomer(Customer c);
+	public void updateCustomer(int customerId, CustomerDTO customerDTO);
 	public List<Customer> listCustomers();
 	public CustomerDTO getCustomerDTOById(int id);
 	public Customer getCustomerById(int id);

@@ -10,6 +10,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import com.khoiphuc27.dto.CustomerDTO;
 import com.khoiphuc27.model.Customer;
 
 @Repository
@@ -115,5 +116,32 @@ public class CustomerDAOImpl implements CustomerDAO {
 		
 		List<Customer> listCustomers = cr.list();
 		return listCustomers;
+	}
+
+	@Override
+	public void updateCustomer(int customerId, CustomerDTO customerDTO) {
+		Session session = this.sessionFactory.getCurrentSession();
+		String queryStr;
+		queryStr = "UPDATE Customer SET";
+		queryStr += " name=:name,";
+		queryStr += " dateOfBirth=:birthday,";
+		queryStr += " phone=:phone,";
+		queryStr += " email=:email,";
+		queryStr += " gender=:gender,";
+		queryStr += " addressLine=:address,";
+		queryStr += " title=:title";
+		queryStr += " WHERE ID=:id";
+		Query query = session.createQuery(queryStr);
+		
+		query.setParameter("name", customerDTO.getName());
+		query.setParameter("birthday", customerDTO.getBirthday());
+		query.setParameter("phone", customerDTO.getPhone());
+		query.setParameter("email", customerDTO.getEmail());
+		query.setParameter("gender", customerDTO.isGender());
+		query.setParameter("address", customerDTO.getAddress());
+		query.setParameter("title", customerDTO.getTitle().name());
+		query.setParameter("id", customerId);
+		
+		int result = query.executeUpdate();
 	}
 }

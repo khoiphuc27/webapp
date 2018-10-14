@@ -151,8 +151,9 @@ public class MainController {
 		else if (resetBtn != null) {
 			return "redirect:/customers";
 		}
-		else if (newBtn != null)
+		else if (newBtn != null) {
 			return "redirect:/customer";
+		}
 		else if (updateBtn != null) {
 			if (ids != null && ids.length > 0) {
 				CustomerDTO selectedForUpdateCustomer = customerService.getCustomerDTOById(ids[0]);
@@ -162,6 +163,13 @@ public class MainController {
 				for (int i : ids) System.out.println(i);
 			}
 			return "redirect:/customer";
+		}
+		else if (deleteBtn != null) {
+			if (ids != null && ids.length > 0) {
+				for (int id : ids)
+					this.customerService.removeCustomer(id);
+			}
+			return "redirect:/customers";
 		}
 		else if (exportBtn != null) {
 			List<Customer> listCustomers = this.customerService.listCustomers();
@@ -173,8 +181,9 @@ public class MainController {
 	
 	@RequestMapping(value="/customer", method=RequestMethod.GET)
 	public String customer(Model model) {
-		if (!model.containsAttribute("customer"))
+		if (!model.containsAttribute("customer")) {
 			model.addAttribute("customer", new CustomerDTO());
+		}
 		model.addAttribute("titleItems", titleEnum.values());
 		return "customer";
 	}
@@ -183,7 +192,7 @@ public class MainController {
 	public String customerAction(HttpServletRequest request, @ModelAttribute("customer") @Valid CustomerDTO customerDTO, BindingResult result, Model model) {
 		String resetBtn = request.getParameter("resetBtn");
 		String saveBtn = request.getParameter("saveBtn");
-		
+				
 		if (resetBtn != null)
 			return "redirect:/customer";
 		else if (saveBtn != null) {
@@ -210,15 +219,16 @@ public class MainController {
 			}
 			else {
 				//Update Customer
-				Customer customer = customerService.getCustomerById(customerDTO.getId());
-				customer.setName(customerDTO.getName());
-				customer.setDateOfBirth(customerDTO.getBirthday());
-				customer.setPhone(customerDTO.getPhone());
-				customer.setEmail(customerDTO.getEmail());
-				customer.setGender((customerDTO.isGender()));
-				customer.setAddressLine(customerDTO.getAddress());
-				customer.setTitle(customerDTO.getTitle().name());
-				this.customerService.updateCustomer(customer);
+//				Customer customer = customerService.getCustomerById(customerDTO.getId());
+//				customer.setName(customerDTO.getName());
+//				customer.setDateOfBirth(customerDTO.getBirthday());
+//				customer.setPhone(customerDTO.getPhone());
+//				customer.setEmail(customerDTO.getEmail());
+//				customer.setGender((customerDTO.isGender()));
+//				customer.setAddressLine(customerDTO.getAddress());
+//				customer.setTitle(customerDTO.getTitle().name());
+				int customerId = customerDTO.getId();
+				this.customerService.updateCustomer(customerId, customerDTO);
 				
 				//Debug
 				System.out.println("Updated customer with ID: " + customerDTO.getId());

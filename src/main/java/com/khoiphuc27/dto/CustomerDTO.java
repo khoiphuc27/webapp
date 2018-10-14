@@ -9,7 +9,7 @@ import com.khoiphuc27.model.titleEnum;
 import com.khoiphuc27.validator.Phone;
 
 public class CustomerDTO {
-	int id;
+	private int id;
 	@Size(max=20)
 	@NotNull
 	private String name;
