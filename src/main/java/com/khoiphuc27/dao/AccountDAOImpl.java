@@ -33,4 +33,17 @@ public class AccountDAOImpl implements AccountDAO {
 		List<Account> accountList = cr.list();
 		return accountList;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Account loadAccountByUsername(String userName) {
+		Session session = this.sessionFactory.getCurrentSession();
+		Criteria cr = session.createCriteria(Account.class);
+		cr.add(Restrictions.eq("userName", userName));
+		List<Account> result = cr.list();
+		if(null == result || result.isEmpty()){
+			return null;
+		}
+		return result.get(0);
+	}
 }

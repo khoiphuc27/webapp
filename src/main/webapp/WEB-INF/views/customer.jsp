@@ -35,8 +35,8 @@
 </head>
 <body>
 <h1>Customer Information</h1>
-<c:url var="customer" value="/customer" ></c:url>
-	<form:form action="customer" method="POST" modelAttribute="customer">
+<c:url var="customer" value="/customer"></c:url>
+	<form:form action="${customer}" method="POST" modelAttribute="customer">
 		<label for="name">Name</label>
     	<form:input type="text" id="name" name="name" path="name" />
     	<br/>
@@ -59,8 +59,11 @@
 	    <label for="title">Title</label>
 	    <form:select id="title" name="title" path="title" items="${titleItems}"/>
 	    <br/>
+	    <input type="hidden" name="customerId" value="${customerId}"/>
 	    <input class="button" type="submit" name="resetBtn" value="Reset">
 		<input class="button" type="submit" name="saveBtn" value="Save">
+		<p><font color="red"><form:errors path="name"/></font></p>
+		<p><font color="red"><form:errors path="birthday"/></font></p>
 		<p><font color="red"><form:errors path="phone"/></font></p>
 		<p><font color="red"><form:errors path="email"/></font></p>
 		<p><font color="red"><form:errors path="address"/></font></p>

@@ -50,8 +50,8 @@ public class ExcelWriter {
             row.createCell(0).setCellValue(customer.getName());
             row.createCell(1).setCellValue(customer.getDateOfBirth());
             row.createCell(2).setCellValue(customer.getPhone());    
-            row.createCell(3).setCellValue(customer.getEmail());        
-            row.createCell(4).setCellValue(customer.isGender());
+            row.createCell(3).setCellValue(customer.getEmail());
+            row.createCell(4).setCellValue(customer.isGender() ? "Male" : "Female");
             row.createCell(5).setCellValue(customer.getAddressLine());
         }
 

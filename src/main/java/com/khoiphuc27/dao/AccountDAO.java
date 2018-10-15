@@ -6,4 +6,5 @@ import com.khoiphuc27.model.Account;
 
 public interface AccountDAO {
 	List<Account> listAccounts(String userName, String password);
+	Account loadAccountByUsername(String userName);
 }

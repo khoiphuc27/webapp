@@ -50,9 +50,6 @@ public class CustomerServiceImpl implements CustomerService {
 		customerDTO.setGender((customerModel.isGender()));
 		customerDTO.setTitle(customerModel.getTitle().equals("MR") ? titleEnum.MR : titleEnum.MRS);
 		
-		//Debug
-		System.out.println(customerDTO.isGender());
-		
 		return customerDTO;
 	}
 

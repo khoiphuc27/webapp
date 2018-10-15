@@ -4,29 +4,37 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.khoiphuc27.model.titleEnum;
 import com.khoiphuc27.validator.Phone;
 
 public class CustomerDTO {
 	private int id;
+	
 	@Size(max=20)
-	@NotNull
+	@NotEmpty(message="Name must not be empty")
 	private String name;
-	@NotNull
+	
+	@NotEmpty(message="Birthday must not be empty")
 	private String birthday;
+	
+	@NotEmpty(message="Phone must not be empty")
 	@Phone
-	@NotNull
 	private String phone;
+	
 	@Email
-	@NotNull
+	@NotEmpty(message="Email must not be empty")
 	private String email;
-	@NotNull
+	
+//	@NotEmpty
 	private boolean gender = true;
+	
 	@Size(max=20)
-	@NotNull
+	@NotEmpty(message="Address must not be empty")
 	private String address;
-	@NotNull
+	
+//	@NotEmpty
 	private titleEnum title = titleEnum.MR;
 	
 	
