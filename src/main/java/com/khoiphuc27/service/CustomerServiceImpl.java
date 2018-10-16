@@ -1,5 +1,6 @@
 package com.khoiphuc27.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -59,7 +60,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 	
 	@Override
-	public List<Customer> searchCustomer(String name, String phone, String birthday, String email, String gender) {
+	public List<Customer> searchCustomer(String name, String phone, Date birthday, String email, String gender) {
 		return this.customerDAO.searchCustomer(name, phone, birthday, email, gender);
 	}
 

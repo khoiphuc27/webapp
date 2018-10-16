@@ -1,5 +1,6 @@
 package com.khoiphuc27.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -59,7 +60,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 	}
 
 	@Override
-	public List<Customer> searchCustomer(String name, String phone, String birthday, String email, String gender) {
+	public List<Customer> searchCustomer(String name, String phone, Date birthday, String email, String gender) {
 		Session session = this.sessionFactory.getCurrentSession();
 		
 		Criteria cr = session.createCriteria(Customer.class);
@@ -68,7 +69,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 			cr.add(Restrictions.like("name", "%" + name + "%"));
 		if (!phone.isEmpty())
 			cr.add(Restrictions.eq("phone", phone));
-		if (!birthday.isEmpty())
+		if (birthday != null)
 			cr.add(Restrictions.eq("dateOfBirth", birthday));
 		if (!email.isEmpty())
 			cr.add(Restrictions.eq("email", email));

@@ -1,5 +1,7 @@
 package com.khoiphuc27.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +11,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import com.khoiphuc27.validator.Phone;
 
@@ -26,7 +30,8 @@ public class Customer {
 	private String name;
 	
 	@Column(name = "dateOfBirth")
-	private String dateOfBirth;
+//	@DateTimeFormat(iso=ISO.DATE, pattern="yyyy-MM-dd")
+	private Date dateOfBirth;
 	
 	@Column(name = "phone")
 	@Size(min=0, max=20)
@@ -61,11 +66,11 @@ public class Customer {
 		this.name = name;
 	}
 
-	public String getDateOfBirth() {
+	public Date getDateOfBirth() {
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(String dateOfBirth) {
+	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 

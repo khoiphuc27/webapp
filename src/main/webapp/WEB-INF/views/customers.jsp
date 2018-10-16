@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page session="false" %>
 <html>
 <head>
@@ -142,7 +143,7 @@
 		<tr>
 			<td><input type="checkbox" name="selectedIds" id="seletedIds" value="${customer.id}"></td>
 			<td>${customer.name}</td>
-			<td>${customer.dateOfBirth}</td>
+			<td><fmt:formatDate pattern="yyyy-MM-dd" value="${customer.dateOfBirth}" /></td>
 			<td>${customer.phone}</td>
 			<td>${customer.email}</td>
 		</tr>

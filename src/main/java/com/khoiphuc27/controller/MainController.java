@@ -1,7 +1,9 @@
 package com.khoiphuc27.controller;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +12,7 @@ import javax.validation.Valid;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,6 +35,7 @@ import com.khoiphuc27.model.Customer;
 import com.khoiphuc27.model.titleEnum;
 import com.khoiphuc27.service.AccountService;
 import com.khoiphuc27.service.CustomerService;
+//import com.khoiphuc27.service.AccountServiceProxy;
 import com.khoiphuc27.utils.ExcelWriter;
 import com.khoiphuc27.view.ExcelReportView;
 
@@ -44,6 +48,9 @@ public class MainController {
 	private CustomerService customerService;
 	
 //	@Autowired
+//	private AccountServiceProxy accountServiceProxy;
+	
+//	@Autowired
 //	@Qualifier("customerFormValidator")
 //	private Validator customerFormValidator;
 //	
@@ -52,6 +59,14 @@ public class MainController {
 //		binder.setValidator(customerFormValidator);
 //	}
 //	
+	
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+	    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+	    format.setLenient(true);
+	    binder.registerCustomEditor(Date.class, new CustomDateEditor(format, true));
+	}
+	
 	@RequestMapping("/")
 	public String home(Model model) {
 		return "redirect:/login";
@@ -139,7 +154,7 @@ public class MainController {
 			
 			String name = customer.getName();
 			String phone = customer.getPhone();
-			String birthday = customer.getDateOfBirth();
+			Date birthday = customer.getDateOfBirth();
 			String email = customer.getEmail();
 			String gender = (customer.isGender() == true) ? "Male" : "Female";
 			
@@ -200,9 +215,10 @@ public class MainController {
 		}
 		else {
 			model.addAttribute("customer", new CustomerDTO());
-			model.addAttribute("titleItems", titleEnum.values());
 		}
+		
 		model.addAttribute("customerId", new String(id));
+		model.addAttribute("titleItems", titleEnum.values());
 		return "customer";
 	}
 	

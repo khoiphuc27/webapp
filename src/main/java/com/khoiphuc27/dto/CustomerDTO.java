@@ -1,10 +1,14 @@
 package com.khoiphuc27.dto;
 
+import java.util.Date;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import com.khoiphuc27.model.titleEnum;
 import com.khoiphuc27.validator.Phone;
@@ -12,12 +16,13 @@ import com.khoiphuc27.validator.Phone;
 public class CustomerDTO {
 	private int id;
 	
-	@Size(max=20)
+	@Size(max=255)
 	@NotEmpty(message="Name must not be empty")
 	private String name;
 	
-	@NotEmpty(message="Birthday must not be empty")
-	private String birthday;
+	@NotNull(message="Birthday must not be empty")
+//	@DateTimeFormat(iso=ISO.DATE, pattern="yyyy-MM-dd")
+	private Date birthday;
 	
 	@NotEmpty(message="Phone must not be empty")
 	@Phone
@@ -30,7 +35,7 @@ public class CustomerDTO {
 //	@NotEmpty
 	private boolean gender = true;
 	
-	@Size(max=20)
+	@Size(max=4000)
 	@NotEmpty(message="Address must not be empty")
 	private String address;
 	
@@ -54,11 +59,11 @@ public class CustomerDTO {
 		this.email = email;
 	}
 	
-	public String getBirthday() {
+	public Date getBirthday() {
 		return birthday;
 	}
 
-	public void setBirthday(String birthday) {
+	public void setBirthday(Date birthday) {
 		this.birthday = birthday;
 	}
 
