@@ -17,7 +17,7 @@
 //
 //public class AccountServiceProxy implements UserDetailsService{
 //	
-//	@Autowired
+//
 //	private AccountDAO accountDAO;
 //
 //	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

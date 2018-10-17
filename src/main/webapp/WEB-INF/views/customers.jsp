@@ -120,7 +120,7 @@
 
 	<input type="submit" name="newBtn" value="New">
 	<input type="submit" name="updateBtn" value="Update">
-	<input type="submit" name="deleteBtn" value="Delete">
+	<input type="submit" name="deleteBtn" value="Delete" onclick="return confirm('Delete selected customers?');">
 	<input type="submit" name="exportBtn" value="Export">
 </div>
 
